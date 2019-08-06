@@ -115,7 +115,7 @@ func (g *Generator) RunSync() error {
 	return nil
 }
 
-func generateTableYAML(driver string, dbName string, tableName string, primaryKey []string, foreignKeys []*types.ForeignKey, indexes []*types.Index, columns []*types.Column) (string, error) {
+func generateTableYAML(driver string, dbName string, tableName string, primaryKey *types.KeyConstraint, foreignKeys []*types.ForeignKey, indexes []*types.Index, columns []*types.Column) (string, error) {
 	schemaForeignKeys := make([]*schemasv1alpha2.SQLTableForeignKey, 0, 0)
 	for _, foreignKey := range foreignKeys {
 		schemaForeignKey := types.ForeignKeyToSchemaForeignKey(foreignKey)
@@ -140,7 +140,7 @@ func generateTableYAML(driver string, dbName string, tableName string, primaryKe
 	}
 
 	tableSchema := &schemasv1alpha2.SQLTableSchema{
-		PrimaryKey:  primaryKey,
+		PrimaryKey:  primaryKey.Columns,
 		Columns:     schemaTableColumns,
 		ForeignKeys: schemaForeignKeys,
 		Indexes:     schemaIndexes,
